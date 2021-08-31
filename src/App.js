@@ -3,11 +3,11 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   NavLink
 } from "react-router-dom";
-import Fragment_Doctor from './components/Fragment_Doctor';
-import Fragment_Mascota from './components/Fragment_Mascota';
+import FragmentDoctor from './components/FragmentDoctor';
+import FragmentMascota from './components/FragmentMascota';
+import FragmentMascotaDoctor from "./components/FragmentMascotaDoctor";
 
 
 function App() {
@@ -21,12 +21,13 @@ function App() {
         </div>
         <Switch>
         <Route path="/doctores">
-            <Fragment_Doctor></Fragment_Doctor>
+            <FragmentDoctor></FragmentDoctor>
           </Route>
           <Route path="/mascotas">
-            <Fragment_Mascota></Fragment_Mascota>
+            <FragmentMascota></FragmentMascota>
           </Route>
           <Route path="/doctor-mascota">
+            <FragmentMascotaDoctor></FragmentMascotaDoctor>
 
           </Route>
         </Switch>

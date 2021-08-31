@@ -3,10 +3,10 @@ import axios from 'axios';
 import {makeStyles} from '@material-ui/core/styles';
 import {useEffect, useState} from 'react';
 import {Table,TableContainer, TableHead,TableCell,TableBody,TableRow, Modal, Button, TextField} from '@material-ui/core';
-import {Edit,Delete} from '@material-ui/icons';
+import {Edit,Delete} from '@material-ui/icons'
+import IconButton from '@material-ui/core/IconButton';
 
-const baseUrl = "http://127.0.0.1:8000/api/animales/";
-
+const baseUrl = "http://127.0.0.1:8000/api/doctores/";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -28,23 +28,24 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-  const Fragment_Mascota = () => {
+const FragmentDoctor = () => {
     const styles=useStyles();
   const [data,setData]=useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
 
-  const [animalSeleccionado,setAnimalSeleccionado]=useState({
+  const [doctorSeleccionado,setDoctorSeleccionado]=useState({
     nombre:'',
-    nombre_dueno:'',
-    id_tipo_animal:'',
-    tipo:''
+    apellidos:'',
+    edad:'',
+    telefono:'',
+
   })
 
   const handleChange=e=>{
     const {name,value}=e.target;
-    setAnimalSeleccionado(prevenState=>({
+    setDoctorSeleccionado(prevenState=>({
       ...prevenState,
       [name]:value
     }))
@@ -54,12 +55,11 @@ const useStyles = makeStyles((theme) => ({
     await axios.get(baseUrl)
     .then(response=>{
       setData(response.data);
-      console.log(response.data);
     })
   }
 
   const peticionPost=async()=>{
-    await axios.post(baseUrl, animalSeleccionado)
+    await axios.post(baseUrl, doctorSeleccionado)
     .then(response=>{
       setData(data.concat(response.data))
       peticionGet()
@@ -68,27 +68,28 @@ const useStyles = makeStyles((theme) => ({
   }
 
   const peticionPut=async()=>{
-    
-    await axios.put(baseUrl+animalSeleccionado.id, animalSeleccionado)
+    await axios.put(baseUrl+doctorSeleccionado.id, doctorSeleccionado)
     .then(response=>{
       var dataNueva=data;
-      dataNueva.map(animal=>{
-        if(animalSeleccionado.id===animal.id){
-            animal.nombre=animalSeleccionado.nombre;
-            animal.nombre_dueno=animalSeleccionado.nombre_dueno;
-            animal.id_tipo_animal=animalSeleccionado.id_tipo_animal;
+      dataNueva.map(doctor=>{
+        if(doctorSeleccionado.id===doctor.id){
+          doctor.nombre=doctorSeleccionado.nombre;
+          doctor.apellidos=doctorSeleccionado.apellidos;
+          doctor.edad=doctorSeleccionado.edad;
+          doctor.telefono=doctorSeleccionado.telefono;
         }
+        return null;
       })
       setData(dataNueva);
-      peticionGet()      
+      console.log(dataNueva);
       abrirCerrarModalEditar();
     })
   }
 
   const peticionDelete=async()=>{
-    await axios.delete(baseUrl+animalSeleccionado.id, animalSeleccionado)
+    await axios.delete(baseUrl+doctorSeleccionado.id, doctorSeleccionado)
     .then(response=>{
-      setData(data.filter(animal=>animal.id!==animalSeleccionado.id));
+      setData(data.filter(doctor=>doctor.id!==doctorSeleccionado.id));
       abrirCerrarModalEliminar();
     })
   }
@@ -103,24 +104,26 @@ const useStyles = makeStyles((theme) => ({
     setModalEliminar(!modalEliminar)
   )
 
-  const seleccionarAnimal=(animal, caso)=>{
-    setAnimalSeleccionado(animal);
+  const seleccionarDoctor=(doctor, caso)=>{
+    setDoctorSeleccionado(doctor);
     (caso==='Editar')?abrirCerrarModalEditar():abrirCerrarModalEliminar()
   }
 
   useEffect(async()=>{
     await peticionGet();
   },[])
-
+  
   const bodyInsertar=(
     <div className={styles.modal}>
-      <h3>Agregar nuevo Mascota</h3>
+      <h3>Agregar nuevo doctor</h3>
       <br></br>
-      <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange}>Nombre de la mascota</TextField>
+      <TextField className={styles.inputMaterial} label="Nombre" name="nombre" onChange={handleChange}>Nombre</TextField>
       <br></br>
-      <TextField className={styles.inputMaterial} label="nombre_dueno" name="nombre_dueno" onChange={handleChange}>Nombre del dueño</TextField>
+      <TextField className={styles.inputMaterial} label="Apellidos" name="apellidos" onChange={handleChange}>Apellidos</TextField>
       <br></br>
-      <TextField className={styles.inputMaterial} label="id_tipo_animal" name="id_tipo_animal" onChange={handleChange} >Tipo de animal</TextField>
+      <TextField className={styles.inputMaterial} label="Edad" name="edad" onChange={handleChange} >Edad</TextField>
+      <br></br>
+      <TextField className={styles.inputMaterial} label="Telefono" name="telefono" onChange={handleChange}>Telefono</TextField>
       <br></br>
       
       <Button color="primary" onClick={()=>peticionPost()}>Agregar</Button>
@@ -129,13 +132,15 @@ const useStyles = makeStyles((theme) => ({
   )
   const bodyEditar=(
     <div className={styles.modal}>
-      <h3>Editar Mascota</h3>
+      <h3>Editar doctor</h3>
       <br></br>
-      <TextField className={styles.inputMaterial} label="nombre" name="nombre" onChange={handleChange} value={animalSeleccionado && animalSeleccionado.nombre}>Nombre</TextField>
+      <TextField className={styles.inputMaterial} label="nombre" name="nombre" onChange={handleChange} value={doctorSeleccionado && doctorSeleccionado.nombre}>Nombre</TextField>
       <br></br>
-      <TextField className={styles.inputMaterial} label="nombre_dueno" name="nombre_dueno" onChange={handleChange} value={animalSeleccionado && animalSeleccionado.nombre_dueno}>Nombre del dueño de la mascota</TextField>
+      <TextField className={styles.inputMaterial} label="apellidos" name="apellidos" onChange={handleChange} value={doctorSeleccionado && doctorSeleccionado.apellidos}>Apellidos</TextField>
       <br></br>
-      <TextField className={styles.inputMaterial} label="id_tipo_animal" name="id_tipo_animal" onChange={handleChange} value={animalSeleccionado && animalSeleccionado.id_tipo_animal}>Tipo mascota</TextField>
+      <TextField className={styles.inputMaterial} label="edad" name="edad" onChange={handleChange} value={doctorSeleccionado && doctorSeleccionado.edad}>Edad</TextField>
+      <br></br>
+      <TextField className={styles.inputMaterial} label="telefono" name="telefono" onChange={handleChange} value={doctorSeleccionado && doctorSeleccionado.telefono}>Telefono</TextField>
       <br></br>
       <br></br>
       <Button color="primary" onClick={peticionPut}>Editar</Button>
@@ -144,13 +149,12 @@ const useStyles = makeStyles((theme) => ({
   )
   const bodyEliminar=(
     <div className={styles.modal}>
-      <h3>¿Seguro que desea eliminar a la mascota?</h3>
-      <p>Mascota:  {animalSeleccionado && animalSeleccionado.nombre} </p>
+      <h3>¿Seguro que desea eliminar al doctor?</h3>
+      <p>Doctor:  {doctorSeleccionado && doctorSeleccionado.nombre} </p>
       <Button color="primary" onClick={()=>peticionDelete()}>Si</Button>
       <Button onClick={abrirCerrarModalEliminar}>No</Button>
     </div>
   )
-  
     return (
         <div>
             
@@ -158,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
       
       <div className="contenedorTable">
       <div className="terms ">
-          <h2>Mascotas</h2>
+          <h2>Doctores</h2>
       </div>
       
       
@@ -166,24 +170,30 @@ const useStyles = makeStyles((theme) => ({
         <Table>
           <TableHead className="colorHead">
             <TableRow>
-              <TableCell>Nombre de la mascota</TableCell>
-              <TableCell>Nombre del dueño</TableCell>
-              <TableCell>Tipo de animal</TableCell>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Apellidos</TableCell>
+              <TableCell>Edad</TableCell>
+              <TableCell>Telefono</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody className="colorTableBody">
             {
-              data.map(animal=>(
-                <TableRow key={animal.id}>
-                  <TableCell>{animal.nombre}</TableCell>
-                  <TableCell >{animal.nombre_dueno}</TableCell>
-                  <TableCell>{animal.tipo}</TableCell>
+              data.map(doctor=>(
+                <TableRow key={doctor.id}>
+                  <TableCell>{doctor.nombre}</TableCell>
+                  <TableCell >{doctor.apellidos}</TableCell>
+                  <TableCell>{doctor.edad}</TableCell>
+                  <TableCell>{doctor.telefono}</TableCell>
                   <TableCell>
-                    <Edit className="{styles.iconos} colorBotonEditar" onClick={()=>seleccionarAnimal(animal, 'Editar')} ></Edit>
+                  <IconButton  onClick={()=>{seleccionarDoctor(doctor, 'Editar')}}>
+                    <Edit className="colorBotonEditar" />
+                  </IconButton>
                     &nbsp;&nbsp;&nbsp;
-                    <Delete className="{styles.iconos} colorBotonEliminar" onClick={()=>seleccionarAnimal(animal,'Eliminar')}></Delete>
+                    <IconButton  onClick={()=>{seleccionarDoctor(doctor,'Eliminar')}} >
+                    <Delete className="colorBotonEliminar"/>
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))
@@ -195,7 +205,7 @@ const useStyles = makeStyles((theme) => ({
       </TableContainer>
       <div className="botonaling">
         <br></br>
-      <button className="btn btn-success" onClick={abrirCerrarModalInsertar} >Agregar nueva mascota</button>
+      <button className="btn btn-success" onClick={abrirCerrarModalInsertar}>Agregar nuevo doctor</button>
       </div>
       
       
@@ -221,4 +231,4 @@ const useStyles = makeStyles((theme) => ({
     )
 }
 
-export default Fragment_Mascota;
+export default FragmentDoctor;
