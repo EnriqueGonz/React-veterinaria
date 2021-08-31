@@ -11,3 +11,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.contenedorTable{
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+  
+}
+.colorHead{
+  background-color: #80cbc4;
+}
+.colorTableBody{
+  background-color: #bbdefb;
+}
+.colorBotonEditar{
+  color: #1565c0;
+}
+.colorBotonEliminar{
+  color: #b71c1c;
+}
+.btnagregardoc{
+  text-align: right;
+}
+.terms {
+  display: flex;
+}
+
+.terms > p {
+  margin: 0;
+  padding-right: 40px;
+}
+.botonaling{
+  text-align: right;
+}

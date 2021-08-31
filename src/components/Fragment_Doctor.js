@@ -1,33 +1,34 @@
+import React from 'react';
 import axios from 'axios';
 import {makeStyles} from '@material-ui/core/styles';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Table,TableContainer, TableHead,TableCell,TableBody,TableRow, Modal, Button, TextField} from '@material-ui/core';
 import {Edit,Delete} from '@material-ui/icons'
 
 const baseUrl = "http://127.0.0.1:8000/api/doctores/";
 
 const useStyles = makeStyles((theme) => ({
-  modal: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)'
-  },
-  iconos:{
-    cursor: 'pointer'
-  }, 
-  inputMaterial:{
-    width: '100%'
-  }
-}));
+    modal: {
+      position: 'absolute',
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)'
+    },
+    iconos:{
+      cursor: 'pointer'
+    }, 
+    inputMaterial:{
+      width: '100%'
+    }
+  }));
 
-function App() {
-  const styles=useStyles();
+const Fragment_Doctor = () => {
+    const styles=useStyles();
   const [data,setData]=useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
@@ -108,7 +109,6 @@ function App() {
   useEffect(async()=>{
     await peticionGet();
   },[])
-
   const bodyInsertar=(
     <div className={styles.modal}>
       <h3>Agregar nuevo doctor</h3>
@@ -151,8 +151,9 @@ function App() {
       <Button onClick={abrirCerrarModalEliminar}>No</Button>
     </div>
   )
-  return (
-    <div className="App">
+    return (
+        <div>
+            
       
       
       <div className="contenedorTable">
@@ -218,11 +219,8 @@ function App() {
         onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
       </Modal>
-      
-    </div>
-  );
-  
+        </div>
+    )
 }
 
-
-export default App;
+export default Fragment_Doctor;
